@@ -5,10 +5,24 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-      - run: flutter config --enable-windows-desktop
-      - run: flutter build windows
-      - uses: actions/upload-artifact@v3
+      
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0'
+          channel: 'stable'
+      
+      - name: Enable windows build
+        run: flutter config --enable-windows-desktop
+      
+      - name: Get dependencies
+        run: flutter pub get
+        
+      - name: Build Windows
+        run: flutter build windows --release
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
         with:
           name: windows-build
-          path: build/windows/runner/Release/
+          path: build\windows\x64\runner\Release
